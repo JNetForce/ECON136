@@ -52,8 +52,7 @@ for j in range(2, days-1)
     price[1,j] = price[1, j-1]*exp(drift) # Computes the drift only portion
 end
 
-for i in range(1, sims+1)  # rows (each a different simulation)
-    poisson_counter = span
+for i in range(2, sims+1)  # rows (each a different simulation)
     for j in range(2, days-1)    # cols (each a new day!)
         # And below is where you replace the placeholder with the Monte Carlo equation.
         price[i,j] = price[i,j-1]*exp(drift + sigma*randn())
@@ -71,7 +70,7 @@ end
 
 fig = figure("lineplot", figsize=(10,10))
 for i in range(1, sims+1)
-    if i == sims-1
+    if i == sims+1
         plot(price[i,:], label = "Drift Only")
     else
         plot(price[i,:], label = "Drift+Sigma " * string(i))
