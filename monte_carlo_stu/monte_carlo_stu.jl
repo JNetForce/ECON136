@@ -28,14 +28,14 @@ sigma = 0.037874
 start_price = 12.0
 sims = 10
 days = 252
-span = 3
-alpha = 2/(1+span)
-days_after = [0.0 for i in 0:span+1]
-days_after[1] = 4.0
-days_after[4] = 1.0
-for i in range(2, span)
-    days_after[i] = days_after[i-1]*exp(-0.34657359*i)
-end
+#span = 3
+#alpha = 2/(1+span)
+#days_after = [0.0 for i in 0:span+1]
+#days_after[1] = 4.0
+#days_after[4] = 1.0
+#for i in range(2, span)
+#    days_after[i] = days_after[i-1]*exp(-0.34657359*i)
+#end
 # println(days_after)
 
 # The monte-carlo estimator
@@ -49,22 +49,14 @@ end
 # println(price)
 
 for j in range(2, days-1)
-    price[1,j] = price[1, j-1]*exp(sigma*randn()) # ??????
+    price[1,j] = price[1, j-1]*exp(drift) # Computes the drift only portion
 end
 
 for i in range(1, sims+1)  # rows (each a different simulation)
     poisson_counter = span
     for j in range(2, days-1)    # cols (each a new day!)
         # And below is where you replace the placeholder with the Monte Carlo equation.
-        if poisson_counter > 0
-            price[i,j] = price[i,j-1]*exp(drift + days_after[3-poisson_counter+1]*sigma*randn())
-            poisson_counter-= 1
-        elseif pdf(Poisson(30/252), 1) > 1
-            poisson_counter = 3
-            price[i,j] = price[i,j-1]*exp(drift + days_after[3-poisson_counter+1]*sigma*randn())
-        else
-            price[i,j] = price[i,j-1]*exp(drift + sigma*randn())
-        end
+        price[i,j] = price[i,j-1]*exp(drift + sigma*randn())
     end
 end
 # sns.set_style("darkgrid")
